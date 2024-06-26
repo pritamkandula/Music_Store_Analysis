@@ -200,3 +200,27 @@ ON cc.billing_country = ms.billing_country
 WHERE cc.total_spending = ms.max_spending
 ORDER BY 1;
 -- Execution Time = 0.680 ms
+
+-- Let's Caclulate the contribution of sales of 'Rock' genre to the total sales of all genres.
+-- Total Sales for all genres
+SELECT
+    ROUND(CAST(SUM(il.unit_price * il.quantity) AS numeric),3) AS TotalSales
+FROM
+    invoice_line il;
+-- 4709.430
+
+-- Sales for Rock genre
+SELECT
+    ROUND(CAST(SUM(il.unit_price * il.quantity) AS numeric), 3) AS RockSales
+FROM
+    invoice_line il
+JOIN
+    track t ON il.track_id = t.track_id
+JOIN
+    genre g ON t.genre_id = g.genre_id
+WHERE
+    g.name = 'Rock';
+--2608.650
+
+-- (rock_sales / total_sales) * 100
+-- (2608.650 / 4709.430) * 100 = 55.392%
